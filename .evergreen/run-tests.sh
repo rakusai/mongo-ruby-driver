@@ -37,4 +37,3 @@ rvm {$RUBY} do bundle install
 
 echo "Running Ruby driver specs"
 rvm {$RUBY} do bundle exec rake spec
-
