@@ -30,10 +30,10 @@ fi
 echo "Running $AUTH tests over $SSL for $TOPOLOGY and connecting to $MONGODB_URI"
 
 echo "Using $RUBY"
-rvm use {$RUBY}
+rvm use $RUBY
 
 echo "Installing all gem dependencies"
-rvm {$RUBY} do bundle install
+rvm $RUBY do bundle install
 
 echo "Running Ruby driver specs"
-rvm {$RUBY} do bundle exec rake spec
+rvm $RUBY do bundle exec rake spec
