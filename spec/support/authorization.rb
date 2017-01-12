@@ -22,27 +22,36 @@ TEST_DB = 'ruby-driver'.freeze
 # @since 2.0.0
 TEST_COLL = 'test'.freeze
 
+# The URI to use when creating a test client.
+#
+# @since 2.4.2
+MONGODB_URI = ENV['MONGODB_URI']
+
 # The seed addresses to be used when creating a client.
 #
 # @since 2.0.0
-ADDRESSES = ENV['MONGODB_ADDRESSES'] ? ENV['MONGODB_ADDRESSES'].split(',').freeze :
-              [ '127.0.0.1:27017' ].freeze
+ADDRESSES = if MONGODB_URI
+    Mongo::URI.new(MONGODB_URI).servers
+  else
+    ENV['MONGODB_ADDRESSES'] ? ENV['MONGODB_ADDRESSES'].split(',').freeze : [ '127.0.0.1:27017' ].freeze
+  end
 
 # The topology type.
 #
 # @since 2.0.0
-# CONNECT = ENV['RS_ENABLED'] == 'true' ? { connect: :replica_set, replica_set: ENV['RS_NAME'] } :
-#           ENV['SHARDED_ENABLED'] == 'true' ? { connect: :sharded } :
-#           { connect: :direct }
-
-CONNECT = ENV['TOPOLOGY_TYPE'] == 'replica_set' ? { connect: :replica_set, replica_set: ENV['RS_NAME'] } :
-    ENV['TOPOLOGY_TYPE'] == 'sharded_cluster' ? { connect: :sharded } :
-        { connect: :direct }
+CONNECT = ENV['RS_ENABLED'] == 'true' ? { connect: :replica_set, replica_set: ENV['RS_NAME'] } :
+          ENV['SHARDED_ENABLED'] == 'true' ? { connect: :sharded } :
+          { connect: :direct }
 
 # The write concern to use in the tests.
 #
 # @since 2.0.0
-WRITE_CONCERN = CONNECT[:connect] == :replica_set ? { w: ADDRESSES.size } : { w: 1 }
+WRITE_CONCERN = { w: [ADDRESSES.size, 2].min }
+
+# An invalid write concern. w is 1 greater than the number of servers a test client is connected to.
+#
+# @since 2.4.2
+INVALID_WRITE_CONCERN = { w: ADDRESSES.size + 1 }
 
 # Whether to use SSL.
 #
@@ -72,7 +81,7 @@ BASE_OPTIONS = {
 # Options for test suite clients.
 #
 # @since 2.0.3
-TEST_OPTIONS = BASE_OPTIONS.merge(CONNECT).merge(SSL_OPTIONS)
+TEST_OPTIONS = BASE_OPTIONS.merge(SSL_OPTIONS)
 
 # The root user name.
 #
@@ -133,7 +142,7 @@ TEST_READ_WRITE_USER = Mongo::Auth::User.new(
 #
 # @since 2.0.0
 AUTHORIZED_CLIENT = Mongo::Client.new(
-  ADDRESSES,
+  MONGODB_URI || ADDRESSES,
   TEST_OPTIONS.merge(
     database: TEST_DB,
     user: TEST_USER.name,
@@ -144,7 +153,7 @@ AUTHORIZED_CLIENT = Mongo::Client.new(
 #
 # @since 2.0.0
 UNAUTHORIZED_CLIENT = Mongo::Client.new(
-  ADDRESSES,
+  MONGODB_URI || ADDRESSES,
   TEST_OPTIONS.merge(database: TEST_DB, monitoring: false)
 )
 
@@ -153,7 +162,7 @@ UNAUTHORIZED_CLIENT = Mongo::Client.new(
 #
 # @since 2.0.0
 ADMIN_UNAUTHORIZED_CLIENT = Mongo::Client.new(
-  ADDRESSES,
+  MONGODB_URI || ADDRESSES,
   TEST_OPTIONS.merge(database: Mongo::Database::ADMIN, monitoring: false)
 )
 

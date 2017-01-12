@@ -166,7 +166,7 @@ end
 #
 # @since 2.1.0
 def testing_ssl_locally?
-  running_ssl? && !(ENV['CI'] || ENV['JENKINS_CI'])
+  running_ssl? && !(ENV['EVERGREEN_CI'] || ENV['CI'] || ENV['JENKINS_CI'])
 end
 
 # Is the test suite running on SSL.
