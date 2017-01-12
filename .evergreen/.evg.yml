@@ -491,15 +491,17 @@ axes:
 
 buildvariants:
 
-- name: debian
-  display_name: Debian 8.1 x86
+#- name: debian
+#  display_name: Debian 8.1 x86
+#  run_on:
+#    - debian81-test
+#  tasks:
+#    - name: 'test'
+
+- matrix_name: "tests-debian"
+  matrix_spec: { auth: "noauth", ssl: "nossl", ruby: "2.3", version: "latest", topology: "standalone" }
+  display_name: "${version} ${topology} ${auth} ${ssl} ${ruby}"
   run_on:
     - debian81-test
-  tasks:
-    - name: 'test'
-
-- matrix_name: "tests"
-  matrix_spec: { auth: "*", ssl: "*", ruby: "*", version: "*", topology: "*" }
-  display_name: "${version} ${topology} ${auth} ${ssl} ${ruby} "
   tasks:
      - name: "test"
