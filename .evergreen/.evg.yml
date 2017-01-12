@@ -499,7 +499,7 @@ buildvariants:
 #    - name: 'test'
 
 - matrix_name: "tests-debian"
-  matrix_spec: { auth: "noauth", ssl: "nossl", ruby: "2.3", version: "latest", topology: "standalone" }
+  matrix_spec: { auth: "noauth", ssl: "nossl", ruby: "ruby-2.3", version: "latest", topology: "standalone" }
   display_name: "${version} ${topology} ${auth} ${ssl} ${ruby}"
   run_on:
     - debian81-test
