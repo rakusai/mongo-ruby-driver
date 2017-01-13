@@ -40,7 +40,7 @@ require 'support/gridfs'
 
 RSpec.configure do |config|
   config.color     = true
-  config.fail_fast = true unless ENV['CI'] || ENV['JENKINS_HOME']
+  config.fail_fast = true unless ENV['EVERGREEN_CI'] || ENV['CI'] || ENV['JENKINS_HOME']
   config.formatter = 'documentation'
   config.include(Authorization)
 
@@ -197,10 +197,9 @@ def auth_enabled?
     $mongo_client ||= initialize_scanned_client!
     begin
       $mongo_client.use(:admin).command(getCmdLineOpts: 1).first["argv"].include?("--auth")
-    rescue
-      return true
+    rescue => e
+      e.message =~ /(not authorized)|(unauthorized)/
     end
-    false
   end
 end
 

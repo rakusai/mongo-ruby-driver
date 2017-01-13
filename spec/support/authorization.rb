@@ -153,7 +153,7 @@ AUTHORIZED_CLIENT = Mongo::Client.new(
 #
 # @since 2.0.0
 UNAUTHORIZED_CLIENT = Mongo::Client.new(
-  MONGODB_URI || ADDRESSES,
+  ADDRESSES,
   TEST_OPTIONS.merge(database: TEST_DB, monitoring: false)
 )
 
@@ -162,7 +162,7 @@ UNAUTHORIZED_CLIENT = Mongo::Client.new(
 #
 # @since 2.0.0
 ADMIN_UNAUTHORIZED_CLIENT = Mongo::Client.new(
-  MONGODB_URI || ADDRESSES,
+  ADDRESSES,
   TEST_OPTIONS.merge(database: Mongo::Database::ADMIN, monitoring: false)
 )
 
