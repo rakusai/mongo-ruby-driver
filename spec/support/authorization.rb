@@ -86,12 +86,12 @@ TEST_OPTIONS = BASE_OPTIONS.merge(SSL_OPTIONS)
 # The root user name.
 #
 # @since 2.0.0
-ROOT_USER_NAME = defined?(MONGODB_URI) ? MONGODB_URI.credentials[:user] : 'root-user'
+ROOT_USER_NAME = (defined?(MONGODB_URI) && MONGODB_URI.credentials) ? MONGODB_URI.credentials[:user] : 'root-user'
 
 # The root user password.
 #
 # @since 2.0.0
-ROOT_USER_PWD = defined?(MONGODB_URI) ? MONGODB_URI.credentials[:password] : 'password'
+ROOT_USER_PWD = (defined?(MONGODB_URI) && MONGODB_URI.credentials) ? MONGODB_URI.credentials[:password] : 'password'
 
 # Gets the root system administrator user.
 #
