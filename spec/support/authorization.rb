@@ -25,13 +25,13 @@ TEST_COLL = 'test'.freeze
 # The URI to use when creating a test client.
 #
 # @since 2.4.2
-MONGODB_URI = ENV['MONGODB_URI']
+MONGODB_URI = Mongo::URI.new(ENV['MONGODB_URI']) if ENV['MONGODB_URI']
 
 # The seed addresses to be used when creating a client.
 #
 # @since 2.0.0
-ADDRESSES = if MONGODB_URI
-    Mongo::URI.new(MONGODB_URI).servers
+ADDRESSES = if defined?(MONGODB_URI)
+    MONGODB_URI.servers
   else
     ENV['MONGODB_ADDRESSES'] ? ENV['MONGODB_ADDRESSES'].split(',').freeze : [ '127.0.0.1:27017' ].freeze
   end
@@ -86,12 +86,12 @@ TEST_OPTIONS = BASE_OPTIONS.merge(SSL_OPTIONS)
 # The root user name.
 #
 # @since 2.0.0
-ROOT_USER_NAME = ENV['ROOT_USER_NAME'] || 'root-user'
+ROOT_USER_NAME = defined?(MONGODB_URI) ? MONGODB_URI.credentials[:user] : 'root-user'
 
 # The root user password.
 #
 # @since 2.0.0
-ROOT_USER_PWD = ENV['ROOT_USER_PWD'] || 'password'
+ROOT_USER_PWD = defined?(MONGODB_URI) ? MONGODB_URI.credentials[:password] : 'password'
 
 # Gets the root system administrator user.
 #
@@ -142,7 +142,7 @@ TEST_READ_WRITE_USER = Mongo::Auth::User.new(
 #
 # @since 2.0.0
 AUTHORIZED_CLIENT = Mongo::Client.new(
-  MONGODB_URI || ADDRESSES,
+  ADDRESSES,
   TEST_OPTIONS.merge(
     database: TEST_DB,
     user: TEST_USER.name,

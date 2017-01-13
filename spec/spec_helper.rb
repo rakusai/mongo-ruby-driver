@@ -40,7 +40,8 @@ require 'support/gridfs'
 
 RSpec.configure do |config|
   config.color     = true
-  config.fail_fast = true unless ENV['EVERGREEN_CI'] || ENV['CI'] || ENV['JENKINS_HOME']
+  #config.fail_fast = true unless ENV['EVERGREEN_CI'] || ENV['CI'] || ENV['JENKINS_HOME']
+  config.fail_fast = true unless ENV['CI'] || ENV['JENKINS_HOME']
   config.formatter = 'documentation'
   config.include(Authorization)
 
