@@ -417,7 +417,7 @@ tasks:
         - func: "run tests"
 
 axes:
-  - id: mongodb-version
+  - id: "mongodb-version"
     display_name: MongoDB Version
     values:
       - id: "latest"
@@ -445,7 +445,7 @@ axes:
         variables:
            VERSION: "2.4"
 
-  - id: topology
+  - id: "topology"
     display_name: Topology
     values:
       - id: "standalone"
@@ -460,7 +460,7 @@ axes:
         display_name: Sharded Cluster
         variables:
            TOPOLOGY: "sharded_cluster"
-  - id: auth
+  - id: "auth"
     display_name: Authentication
     values:
       - id: "auth"
@@ -471,7 +471,7 @@ axes:
         display_name: NoAuth
         variables:
            AUTH: "noauth"
-  - id: ssl
+  - id: "ssl"
     display_name: SSL
     values:
       - id: "ssl"
@@ -482,7 +482,7 @@ axes:
         display_name: NoSSL
         variables:
            SSL: "nossl"
-  - id: ruby
+  - id: "ruby"
     display_name: Ruby Version
     values:
       - id: "ruby-1.9"
@@ -505,7 +505,7 @@ axes:
 #        display_name: jruby
 #        variables:
 #           RVM_RUBY: "jruby"
-  - id: all-os
+  - id: "os"
     display_name: OS
     values:
       - id: ubuntu1204-test
@@ -521,13 +521,18 @@ axes:
         run_on: rhel70-small
 
 buildvariants:
-- matrix_name: "tests-all-os-topology-ruby"
-  matrix_spec: { auth: "*", ssl: "*", ruby: "*", mongodb-version: "*", topology: "*", all-os: "*" }
-  display_name: "${version} ${topology} ${auth} ${ssl} ${ruby} ${all-os}"
+- matrix_name: "all-topologies-all-rubies-rhel70"
+  matrix_spec: { auth: "*", ssl: "*", ruby: "*", mongodb-version: "*", topology: "*", os: "rhel70" }
+  display_name: "${version} ${topology} ${auth} ${ssl} ${ruby} ${os}"
   tasks:
      - name: "test"
-- matrix_name: "tests-mongodb-3.4-debian"
-  matrix_spec: { auth: "*", ssl: "*", ruby: "*", mongodb-version: "3.4", topology: "*" }
+- matrix_name: "all-os-all-ruby-auth-nossl-standalone"
+  matrix_spec: { auth: "auth", ssl: "nossl", ruby: "*", mongodb-version: "*", topology: "standalone", os: "*" }
+  display_name: "${version} ${topology} ${auth} ${ssl} ${ruby} ${os}"
+  tasks:
+     - name: "test"
+- matrix_name: "debian-mongodb-3.4-ruby-2.3-all-topologies-all-auth-all-ssl"
+  matrix_spec: { auth: "*", ssl: "*", ruby: "ruby-2.3", mongodb-version: "3.4", topology: "*" }
   display_name: "${version} ${topology} ${auth} ${ssl} ${ruby}"
   run_on:
     - debian81-test
