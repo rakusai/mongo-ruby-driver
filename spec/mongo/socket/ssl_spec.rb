@@ -2,8 +2,13 @@ require 'spec_helper'
 
 describe Mongo::Socket::SSL, if: running_ssl? do
 
+  let(:family) do
+    resolver = default_address.instance_variable_get(:@resolver)
+    Mongo::Address::FAMILY_MAP.key(resolver.class)
+  end
+
   let(:socket) do
-    described_class.new(*default_address.to_s.split(":"), default_address.host, 5, Socket::PF_INET, options)
+    described_class.new(*default_address.to_s.split(":"), default_address.host, 5, Socket::PF_INET6, options)
   end
 
   let(:options) do
