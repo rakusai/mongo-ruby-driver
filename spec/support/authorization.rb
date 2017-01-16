@@ -46,12 +46,12 @@ CONNECT = ENV['RS_ENABLED'] == 'true' ? { connect: :replica_set, replica_set: EN
 # The write concern to use in the tests.
 #
 # @since 2.0.0
-WRITE_CONCERN = { w: [ADDRESSES.size, 2].min }
+WRITE_CONCERN = { w: (CONNECT[:connect] == :replica_set ? 2 : 1) }
 
 # An invalid write concern. w is 1 greater than the number of servers a test client is connected to.
 #
 # @since 2.4.2
-INVALID_WRITE_CONCERN = { w: ADDRESSES.size + 1 }
+INVALID_WRITE_CONCERN = { w: 4 }
 
 # Whether to use SSL.
 #
