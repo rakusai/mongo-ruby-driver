@@ -417,7 +417,7 @@ tasks:
         - func: "run tests"
 
 axes:
-  - id: version
+  - id: mongodb-version
     display_name: MongoDB Version
     values:
       - id: "latest"
@@ -505,10 +505,29 @@ axes:
 #        display_name: jruby
 #        variables:
 #           RVM_RUBY: "jruby"
+  - id: all-os
+    display_name: OS
+    values:
+      - id: ubuntu1204-test
+        display_name: "Ubuntu 12.04"
+        run_on: ubuntu1204-test
+
+      - id: ubuntu-14.04
+        display_name: "Ubuntu 14.04"
+        run_on: ubuntu1404-test
+
+      - id: rhel70
+        display_name: "RHEL 7.0"
+        run_on: rhel70-small
 
 buildvariants:
-- matrix_name: "tests-debian"
-  matrix_spec: { auth: "*", ssl: "*", ruby: "*", version: "3.4", topology: "standalone" }
+- matrix_name: "tests-all-os-topology-ruby"
+  matrix_spec: { auth: "*", ssl: "*", ruby: "*", mongodb-version: "*", topology: "*", all-os: "*" }
+  display_name: "${version} ${topology} ${auth} ${ssl} ${ruby} ${all-os}"
+  tasks:
+     - name: "test"
+- matrix_name: "tests-mongodb-3.4-debian"
+  matrix_spec: { auth: "*", ssl: "*", ruby: "*", mongodb-version: "3.4", topology: "*" }
   display_name: "${version} ${topology} ${auth} ${ssl} ${ruby}"
   run_on:
     - debian81-test
