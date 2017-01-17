@@ -225,6 +225,7 @@ describe Mongo::Grid::FSBucket do
 
     before do
       fs.insert_one(file)
+      sleep(3)
     end
 
     after do
@@ -267,7 +268,9 @@ describe Mongo::Grid::FSBucket do
     context 'when inserting the file once' do
 
       let!(:result) do
-        fs.insert_one(file)
+        id = fs.insert_one(file)
+        sleep(3)
+        id
       end
 
       after do
