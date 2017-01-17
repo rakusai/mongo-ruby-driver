@@ -46,7 +46,15 @@ CONNECT = ENV['RS_ENABLED'] == 'true' ? { connect: :replica_set, replica_set: EN
 # The write concern to use in the tests.
 #
 # @since 2.0.0
-WRITE_CONCERN = { w: (CONNECT[:connect] == :replica_set ? 2 : 1) }
+w = case CONNECT[:connect]
+      when :replica_set
+        3
+      when :sharded
+        2
+      when :direct
+        1
+      end
+WRITE_CONCERN = { w: w }
 
 # An invalid write concern. w is 1 greater than the number of servers a test client is connected to.
 #
